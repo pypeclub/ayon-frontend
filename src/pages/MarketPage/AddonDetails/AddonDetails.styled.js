@@ -1,4 +1,4 @@
-import { Button, Panel, getShimmerStyles } from '@ynput/ayon-react-components'
+import { Button, Panel, getShimmerStyles, theme } from '@ynput/ayon-react-components'
 import ReactMarkdown from 'react-markdown'
 import styled from 'styled-components'
 
@@ -141,6 +141,10 @@ export const MetaPanelRow = styled.div`
   .value {
     display: flex;
     flex-direction: column;
+  }
+
+  .label {
+    ${theme.titleMedium}
   }
 
   .more:hover {

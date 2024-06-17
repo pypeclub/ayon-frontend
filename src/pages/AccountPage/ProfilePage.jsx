@@ -9,6 +9,7 @@ import {
   InputText,
   getShimmerStyles,
   InputSwitch,
+  theme,
 } from '@ynput/ayon-react-components'
 import {
   useUpdateUserMutation,
@@ -19,7 +20,6 @@ import styled, { css } from 'styled-components'
 import UserAttribForm from '../SettingsPage/UsersSettings/UserAttribForm'
 import SetPasswordDialog from '../SettingsPage/UsersSettings/SetPasswordDialog'
 import ayonClient from '../../ayon'
-import Type from '/src/theme/typography.module.css'
 import { updateUserAttribs, updateUserPreferences } from '../../features/user'
 import { useDispatch } from 'react-redux'
 import { useNotifications } from '/src/context/notificationsContext'
@@ -55,7 +55,7 @@ export const AvatarName = styled.span`
   justify-content: center;
   align-items: center;
   padding: 16px 16px 8px 16px;
-  > span {
+  .name {
     position: relative;
     ${({ $hasData }) =>
       !$hasData &&
@@ -64,6 +64,8 @@ export const AvatarName = styled.span`
         border-radius: var(--border-radius-m);
         ${getShimmerStyles()}
       `}
+
+    ${theme.headlineMedium}
   }
 `
 
@@ -246,7 +248,8 @@ const ProfilePage = ({ user = {}, isLoading }) => {
         <FormsStyled>
           <Avatar user={user} />
           <AvatarName $hasData={!!userName}>
-            <span className={Type.headlineMedium}>{userName ? userName : 'User FullName'}</span>
+            {' '}
+            <span className="name">{userName ? userName : 'User FullName'}</span>
           </AvatarName>
           <Panel style={{ background: 'none' }}>
             <FormRow label="Username" key="Username">

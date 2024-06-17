@@ -1,4 +1,4 @@
-import { Button, getShimmerStyles } from '@ynput/ayon-react-components'
+import { Button, getShimmerStyles, theme } from '@ynput/ayon-react-components'
 import styled, { keyframes } from 'styled-components'
 
 export const Container = styled.div`
@@ -52,7 +52,9 @@ export const TitleWrapper = styled.div`
   gap: var(--base-gap-small);
 `
 
-export const Title = styled.div``
+export const Title = styled.div`
+  ${theme.titleMedium}
+`
 
 export const AuthorWrapper = styled.div`
   display: inline-flex;
@@ -60,7 +62,9 @@ export const AuthorWrapper = styled.div`
   align-items: center;
 `
 
-export const Author = styled.div``
+export const Author = styled.div`
+  ${theme.labelMedium}
+`
 
 export const Buttons = styled.div`
   display: inline-flex;

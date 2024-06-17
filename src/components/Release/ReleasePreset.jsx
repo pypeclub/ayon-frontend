@@ -2,7 +2,6 @@ import React from 'react'
 import * as Styled from './ReleasePreset.styled'
 import { Icon } from '@ynput/ayon-react-components'
 import { format, formatDistanceToNow } from 'date-fns'
-import Type from '/src/theme/typography.module.css'
 
 const ReleasePreset = ({
   label,
@@ -54,14 +53,14 @@ const ReleasePreset = ({
       <Styled.Header>
         <Icon icon={icon} />
         <div>
-          <h3 className={Type.titleLarge}>{label || name}</h3>
+          <h3>{label || name}</h3>
           <span className="bio">{bio}</span>
         </div>
       </Styled.Header>
       {isSelected && (
         <>
           {/* <Styled.Addons className={Type.bodySmall}>Addons: {addons?.join(', ')}</Styled.Addons> */}
-          <Styled.Addons className={Type.bodySmall}>
+          <Styled.Addons>
             Release: Ynput - {name} - <span onClick={handleClick}>{fuzzyDate}</span>
           </Styled.Addons>
         </>

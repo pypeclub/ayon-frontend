@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 
 const MetaPanelRow = ({ label, children, valueDirection = 'column', ...props }) => (
   <Styled.MetaPanelRow {...props}>
-    <span className={classNames('label', Type.titleMedium)}>{label}</span>
+    <span className={'label'}>{label}</span>
     <span
       className="value"
       style={{

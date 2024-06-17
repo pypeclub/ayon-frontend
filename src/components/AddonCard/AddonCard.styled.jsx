@@ -1,3 +1,4 @@
+import { theme } from '@ynput/ayon-react-components'
 import styled, { css } from 'styled-components'
 
 export const AddonCard = styled.button`
@@ -74,5 +75,8 @@ export const AddonCard = styled.button`
 
   .version {
     margin-left: auto;
+  }
+  .title {
+    ${theme.titleSmall}
   }
 `

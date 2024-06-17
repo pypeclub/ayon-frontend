@@ -8,8 +8,7 @@ import {
   isSameWeek,
   isSameMinute,
 } from 'date-fns'
-import Typography from '/src/theme/typography.module.css'
-import { classNames } from 'primereact/utils'
+import { theme } from '@ynput/ayon-react-components'
 import styled from 'styled-components'
 
 const DateStyled = styled.span`
@@ -19,6 +18,8 @@ const DateStyled = styled.span`
   white-space: nowrap;
   display: flex;
   align-items: center;
+
+  ${theme.bodySmall}
 `
 
 export const getFuzzyDate = (date) => {
@@ -61,7 +62,7 @@ const ActivityDate = ({ date, isExact, ...props }) => {
   if (sameMin) dateString = 'Just now'
 
   return (
-    <DateStyled className={classNames(Typography.bodySmall, 'date')} {...props}>
+    <DateStyled className={'date'} {...props}>
       {dateString}
     </DateStyled>
   )

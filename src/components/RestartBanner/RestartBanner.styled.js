@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { Button } from '@ynput/ayon-react-components'
+import { Button, theme } from '@ynput/ayon-react-components'
 
 // animate slide in from bottom
 export const SlideIn = keyframes`
@@ -34,6 +34,10 @@ export const Main = styled.div`
 
   align-items: center;
   justify-content: center;
+
+  .message {
+    ${theme.titleMedium}
+  }
 `
 
 export const SnoozeButton = styled(Button)`

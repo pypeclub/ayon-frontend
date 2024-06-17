@@ -1,7 +1,6 @@
 import React from 'react'
 import * as Styled from './YnputCloud.styled'
 import { Icon, Spacer } from '@ynput/ayon-react-components'
-import Type from '/src/theme/typography.module.css'
 import CloudLogo from '/src/svg/CloudLogo'
 
 const YnputCloudButton = React.forwardRef(
@@ -25,9 +24,7 @@ const YnputCloudButton = React.forwardRef(
             {showStatus && (
               <>
                 <Icon icon={isConnected ? 'check_circle' : isLoading ? 'sync' : 'add'} />
-                <span className={Type.labelLarge}>
-                  {isConnected ? 'connected' : 'link an account'}
-                </span>
+                <span className="state">{isConnected ? 'connected' : 'link an account'}</span>
               </>
             )}
             <Spacer />

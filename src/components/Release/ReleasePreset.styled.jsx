@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import getShimmerStyles from '/src/styles/getShimmerStyles'
+import { theme } from '@ynput/ayon-react-components'
 
 export const Preset = styled.li`
   display: flex;
@@ -78,11 +79,11 @@ export const Header = styled.header`
     overflow: hidden;
 
     h3 {
-      /* font-size: 16px; */
       border: none;
       margin: 0;
       padding: 0;
-      /* font-weight: bold; */
+
+      ${theme.titleLarge}
     }
   }
 `
@@ -99,4 +100,6 @@ export const Addons = styled.span`
   & span {
     font-size: inherit;
   }
+
+  ${theme.bodySmall}
 `

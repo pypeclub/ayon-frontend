@@ -1,5 +1,4 @@
-import { Section } from '@ynput/ayon-react-components'
-import Type from '/src/theme/typography.module.css'
+import { Section, theme } from '@ynput/ayon-react-components'
 import AddonFilters from './AddonFilters'
 import { useEffect, useMemo, useState } from 'react'
 import { StringParam, useQueryParam, withDefault } from 'use-query-params'
@@ -40,6 +39,7 @@ const StyledHeader = styled.header`
 
   h1 {
     margin: 8px;
+    ${theme.headlineSmall}
   }
 `
 
@@ -316,7 +316,7 @@ const MarketPage = () => {
       />
       <main style={{ flexDirection: 'column', overflow: 'hidden' }}>
         <StyledHeader>
-          <h1 className={Type.headlineSmall}>Addon Market</h1>
+          <h1>Addon Market</h1>
         </StyledHeader>
         <Section style={{ overflow: 'hidden', flexDirection: 'row', justifyContent: 'center' }}>
           <AddonFilters onSelect={setFilter} onConnection={(user) => setIsCloudConnected(!!user)} />

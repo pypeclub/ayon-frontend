@@ -1,6 +1,5 @@
 import React from 'react'
-import Typography from '/src/theme/typography.module.css'
-import { Icon } from '@ynput/ayon-react-components'
+import { Icon, theme } from '@ynput/ayon-react-components'
 import styled from 'styled-components'
 
 export const Placeholder = styled.div`
@@ -18,6 +17,7 @@ export const Placeholder = styled.div`
 
   h3 {
     text-align: center;
+    ${theme.titleLarge}
   }
 
   .icon {
@@ -52,7 +52,7 @@ const EmptyPlaceholder = ({ icon, message, error }) => {
     return (
       <Placeholder className={'isError'}>
         <Icon icon="error" />
-        <h3 className={Typography.titleLarge}>Something went wrong.</h3>
+        <h3>Something went wrong.</h3>
         <span className="error-message">ERROR: {error}</span>
         <span>This should not happen. Please send a screenshot to the Ynput team!</span>
       </Placeholder>
@@ -62,7 +62,7 @@ const EmptyPlaceholder = ({ icon, message, error }) => {
   return (
     <Placeholder>
       <Icon icon={icon} />
-      <h3 className={Typography.titleLarge}>{message}</h3>
+      <h3>{message}</h3>
     </Placeholder>
   )
 }

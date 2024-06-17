@@ -1,7 +1,6 @@
-import { Panel, Section } from '@ynput/ayon-react-components'
+import { Panel, Section, theme } from '@ynput/ayon-react-components'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Type from '/src/theme/typography.module.css'
 import { classNames } from 'primereact/utils'
 import YnputConnector from '/src/components/YnputCloud/YnputConnector'
 
@@ -33,6 +32,10 @@ const StyledList = styled(Panel)`
       background-color: var(--md-sys-color-primary-container);
       color: var(--md-sys-color-on-primary-container);
     }
+  }
+
+  .title {
+    ${theme.titleMedium}
   }
 `
 
@@ -83,7 +86,7 @@ const AddonFilters = ({ onSelect, onConnection }) => {
   return (
     <StyledSection>
       <StyledList>
-        <div className={classNames('title', Type.titleMedium)}>Installed</div>
+        <div className={'title'}>Installed</div>
         {installFilters.map((filter) => (
           <div
             key={filter.id}

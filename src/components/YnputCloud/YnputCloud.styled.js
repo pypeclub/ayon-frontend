@@ -1,4 +1,4 @@
-import { Button as ayonButton } from '@ynput/ayon-react-components'
+import { Button as ayonButton, theme } from '@ynput/ayon-react-components'
 import styled, { css } from 'styled-components'
 import getShimmerStyles from '/src/styles/getShimmerStyles'
 
@@ -81,6 +81,10 @@ export const Status = styled.div`
   width: 100%;
   gap: var(--base-gap-small);
   align-items: center;
+
+  .state {
+    ${theme.labelLarge}
+  }
 `
 
 export const Container = styled.div`
