@@ -6,7 +6,7 @@ import DetailsPanelSlideOut from '@containers/DetailsPanel/DetailsPanelSlideOut/
 import { useGetProjectsInfoQuery } from '@queries/userDashboard/getUserDashboard'
 import { ViewerDetailsPanelWrapper } from './Viewer.styled'
 
-const ViewerDetailsPanel = ({ versionIds = [], projectName }) => {
+const ViewerDetailsPanel = ({ versionIds = [], projectName, dropzoneElement }) => {
   const { data: projectsInfo = {} } = useGetProjectsInfoQuery(
     { projects: [projectName] },
     { skip: !projectName },
@@ -33,6 +33,7 @@ const ViewerDetailsPanel = ({ versionIds = [], projectName }) => {
           entityType={'version'}
           scope="review"
           style={{ boxShadow: 'none', borderRadius: 4, overflow: 'hidden' }}
+          dropzoneElement={dropzoneElement}
         />
       )}
       <DetailsPanelSlideOut projectsInfo={projectsInfo} scope="review" />

@@ -1,5 +1,5 @@
 import { Button, Panel } from '@ynput/ayon-react-components'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import DetailsPanelHeader from './DetailsPanelHeader/DetailsPanelHeader'
 import { useDispatch, useSelector } from 'react-redux'
 import Feed from '@containers/Feed/Feed'
@@ -15,6 +15,8 @@ import { Watchers } from '@containers/Watchers/Watchers'
 import Shortcuts from '@containers/Shortcuts'
 import { isEmpty } from 'lodash'
 import useGetEntityPath from './hooks/useGetEntityPath'
+import { createPortal } from 'react-dom'
+import ReviewablesList from '@containers/ReviewablesList'
 
 export const entitiesWithoutFeed = ['product', 'representation']
 
@@ -40,6 +42,7 @@ const DetailsPanel = ({
   scope,
   isCompact = false,
   onWatchersUpdate,
+  dropzoneElement,
 }) => {
   const path = isSlideOut ? 'slideOut' : 'pinned'
   let selectedTab = useSelector((state) => state.details[path][scope].tab)
@@ -87,7 +90,14 @@ const DetailsPanel = ({
   }, [originalArgs])
 
   // merge current entities data with fresh details data
-  const entityDetailsData = getEntityDetailsData({ entities, entityType, projectsInfo, detailsData, isSuccess, isError })
+  const entityDetailsData = getEntityDetailsData({
+    entities,
+    entityType,
+    projectsInfo,
+    detailsData,
+    isSuccess,
+    isError,
+  })
 
   // get the first project name and info to be used in the feed.
   const firstProject = projectNames[0]
@@ -113,6 +123,10 @@ const DetailsPanel = ({
   )
 
   if (!firstEntityData || isEmpty(firstEntityData)) return null
+
+  const firstVersion = entities[0]
+
+  console.log(dropzoneElement)
 
   return (
     <>
@@ -196,6 +210,19 @@ const DetailsPanel = ({
           />
         )}
       </Panel>
+      {dropzoneElement &&
+        createPortal(
+          <ReviewablesList
+            projectName={firstVersion.projectName}
+            productId={firstVersion.productId}
+            versionId={firstVersion.id}
+            isLoadingVersion={isFetchingEntitiesDetails}
+            scope={scope}
+            isPortal
+          />,
+          dropzoneElement,
+          'empty-files-upload',
+        )}
     </>
   )
 }

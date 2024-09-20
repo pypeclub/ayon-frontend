@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@ynput/ayon-react-components'
 import * as Styled from './Viewer.styled'
 import VersionSelectorTool from '@components/VersionSelectorTool/VersionSelectorTool'
@@ -17,6 +17,7 @@ import { GetReviewablesResponse } from '@queries/review/types'
 import { compareDesc } from 'date-fns'
 import ReviewVersionDropdown from '@/components/ReviewVersionDropdown'
 import { productTypes } from '@state/project'
+import clsx from 'clsx'
 
 interface ViewerProps {
   onClose?: () => void
@@ -37,6 +38,7 @@ const Viewer = ({ onClose }: ViewerProps) => {
   } = useSelector((state: $Any) => state.viewer)
 
   const [autoPlay, setAutoPlay] = useState(quickView)
+  const dropzoneRef = useRef<HTMLDivElement>(null)
 
   const dispatch = useDispatch()
 
@@ -270,6 +272,8 @@ const Viewer = ({ onClose }: ViewerProps) => {
   const isPlayable = availability !== 'conversionRequired'
 
   const noVersions = !versionsAndReviewables.length && !isFetchingReviewables
+  // has versions but no reviewables
+  const noReviewables = !reviewables.length && !isFetchingReviewables && !noVersions
 
   if (selectedReviewable?.mimetype.includes('video') && isPlayable) {
     viewerComponent = (
@@ -290,29 +294,18 @@ const Viewer = ({ onClose }: ViewerProps) => {
     )
   } else if (!isFetchingReviewables) {
     let message = 'No preview available'
-    let children = null
 
     if (noVersions) {
       message = 'This task has published no versions.'
     } else if (!reviewables.length) {
       message = 'This version has no online reviewables.'
-      children = (
-        <Button onClick={handleUploadButton} icon="upload" variant="filled">
-          Upload a file
-        </Button>
-      )
     } else if (availability === 'conversionRequired') {
       message = 'File not supported and needs conversion'
     }
 
-    viewerComponent = (
-      <EmptyPlaceholder icon="hide_image" message={message}>
-        {children}
-      </EmptyPlaceholder>
-    )
+    viewerComponent = <EmptyPlaceholder icon="hide_image" message={message} />
   }
 
-  // todo: noVersions modal smaller
   return (
     <Styled.Container>
       <Styled.PlayerToolbar>
@@ -338,6 +331,7 @@ const Viewer = ({ onClose }: ViewerProps) => {
       {onClose && <Button onClick={onClose} icon={'close'} className="close" />}
       <Styled.FullScreenWrapper handle={handle} onChange={fullScreenChange}>
         {viewerComponent}
+        <Styled.ReviewablesUploadBox ref={dropzoneRef} className={clsx({ hide: !noReviewables })} />
       </Styled.FullScreenWrapper>
       <ReviewablesSelector
         reviewables={shownOptions}
@@ -346,7 +340,13 @@ const Viewer = ({ onClose }: ViewerProps) => {
         onUpload={handleUploadButton}
         projectName={projectName}
       />
-      {!noVersions && <ViewerDetailsPanel versionIds={versionIds} projectName={projectName} />}
+      {!noVersions && (
+        <ViewerDetailsPanel
+          versionIds={versionIds}
+          projectName={projectName}
+          dropzoneElement={dropzoneRef.current}
+        />
+      )}
     </Styled.Container>
   )
 }

@@ -56,6 +56,7 @@ interface ReviewablesListProps {
   productId: string
   isLoadingVersion: boolean
   scope: string
+  isPortal?: boolean
 }
 
 const ReviewablesList: FC<ReviewablesListProps> = ({
@@ -64,6 +65,7 @@ const ReviewablesList: FC<ReviewablesListProps> = ({
   productId,
   isLoadingVersion,
   scope,
+  isPortal,
 }) => {
   const dispatch = useDispatch()
   // returns all reviewables for a product
@@ -427,8 +429,13 @@ const ReviewablesList: FC<ReviewablesListProps> = ({
 
   return (
     <>
+      {isPortal && <div className="drop-zone" onDragEnter={() => setIsDraggingFile(true)}></div>}
+
       {!isDraggingFile && (
-        <Styled.ReviewablesList onDragEnter={() => setIsDraggingFile(true)}>
+        <Styled.ReviewablesList
+          onDragEnter={() => setIsDraggingFile(true)}
+          className="reviewable-list"
+        >
           {isLoading ? (
             Array.from({ length: 3 }).map((_, index) => (
               <Styled.LoadingCard key={index} className="loading" />
@@ -517,11 +524,12 @@ const ReviewablesList: FC<ReviewablesListProps> = ({
                 />
               ))}
 
-              {/* upload button */}
-              <Styled.Upload className="upload">
-                <span>Drop or click to upload</span>
-                <input type="file" multiple onChange={handleInputChange} ref={inputRef} />
-              </Styled.Upload>
+              {!uploading[versionId]?.length && (
+                <Styled.Upload className="upload button">
+                  <span>Drop or click to upload</span>
+                  <input type="file" multiple onChange={handleInputChange} ref={inputRef} />
+                </Styled.Upload>
+              )}
             </>
           )}
         </Styled.ReviewablesList>

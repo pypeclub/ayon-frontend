@@ -65,3 +65,19 @@ export const ViewerDetailsPanelWrapper = styled.div`
   z-index: 1000;
   overflow: hidden;
 `
+
+export const ReviewablesUploadBox = styled.div`
+  .drop-zone {
+    position: absolute;
+    inset: 0;
+  }
+
+  .upload.button {
+    width: 400px;
+    height: 100px;
+  }
+
+  &.hide {
+    display: none;
+  }
+`
