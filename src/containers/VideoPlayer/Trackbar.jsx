@@ -68,6 +68,7 @@ const Trackbar = ({
   isPlaying,
 }) => {
   const canvasRef = useRef(null)
+  const canvasWidth = canvasRef.current?.width
   const [isDragging, setIsDragging] = useState(false)
 
   const numFrames = useMemo(() => Math.floor(duration * frameRate), [frameRate, duration])
@@ -192,13 +193,13 @@ const Trackbar = ({
     // ctx.moveTo(markInX, height - 1)
     // ctx.lineTo(markOutX, height - 1)
     // ctx.stroke()
-  }, [currentTime, duration, markIn, markOut, isPlaying])
+  }, [currentTime, duration, markIn, markOut, isPlaying, canvasWidth])
 
   // Events
 
   useEffect(() => {
     drawSlider()
-  }, [currentTime, duration, markIn, markOut, isPlaying])
+  }, [currentTime, duration, markIn, markOut, isPlaying, canvasWidth])
 
   // Dragging
 
