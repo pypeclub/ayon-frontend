@@ -63,11 +63,11 @@ const NewEditorPage = () => {
     loadNewBranches(branches)
   }, [projectName])
 
-  console.log('project data: ', project)
-
   const {
     data,
-    test,
+    setExpandedItem,
+    expanded,
+    setExpanded
   } = useExtendedHierarchyTable({
     projectName,
     folderTypes: project.folders || {},
@@ -76,9 +76,7 @@ const NewEditorPage = () => {
 
   const handleToggleFolder = useCallback(
     async (event: $Any, folderId: string) => {
-      test(folderId)
-      // console.log('toggling???', event, folderIds)
-      // loadNewBranches([folderIds])
+      setExpandedItem(folderId)
     },
     [rootDataCache, loadNewBranches, dispatch],
   )
@@ -97,6 +95,8 @@ const NewEditorPage = () => {
               <MyTable
                 attribs={attribFields}
                 rootData={rootDataCache}
+                expanded={expanded}
+                setExpanded={setExpanded}
                 toggleExpanderHandler={handleToggleFolder}
                 tableData={data}
                 isLoading={false}
