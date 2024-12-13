@@ -1,6 +1,6 @@
 // create table data for the hierarchy
 import { useGetFolderListQuery } from '@queries/getHierarchy'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FolderListItem } from '@api/rest/folders'
 import { ExpandedState } from '@tanstack/react-table'
 import { useGetExpandedBranchQuery } from '@queries/editor/getEditor'
@@ -36,12 +36,12 @@ type Props = {
 
 const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Props) => {
   const [expanded, setExpanded] = useState<ExpandedState>({})
-
-  const [itemExpanded, setItemExpanded] = useState<string>('0')
+  const [itemExpanded, setItemExpanded] = useState<string>('root')
+  const [extraData, setExtraData] = useState({})
 
   let {
     status,
-    data: extraData,
+    data: branchData = [],
     isLoading: isLoadingExpandedBranch,
     isError,
   } = useGetExpandedBranchQuery({
@@ -49,55 +49,44 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
     parentId: itemExpanded,
   })
 
+  if (branchData && new Set(Object.keys(branchData)).difference(new Set(Object.keys(extraData))).size > 0) {
+    setExtraData({ ...extraData, ...branchData })
+  }
+
   const {
     data: { folders = [] } = {},
     isLoading,
     isFetching,
   } = useGetFolderListQuery({ projectName: projectName || '' }, { skip: !projectName })
 
-
   let tableData: TableRow[] = useMemo(() => {
     if (!folders.length || isLoading || isFetching) return []
     let x = folders
-    const ids = x.map(el => el.id)
-    if (extraData) {
-      for (const item of Object.values(extraData)) {
+    const ids = x.map((el) => el.id)
+    for (const item of Object.values(extraData)) {
+      // @ts-ignore
+      if (!ids.includes(item.data.id)) {
         // @ts-ignore
-        if (!ids.includes(item.data.id) ) {
-          // @ts-ignore
-          const newItem = taskToTableRow(item)
-          // @ts-ignore
-          x = [...x, newItem]
-        }
+        const newItem = taskToTableRow(item)
+        // @ts-ignore
+        x = [...x, newItem]
       }
     }
 
-    console.log('flat data: ', x)
     const rows = createDataTree(x)
 
-    console.log('rows: ', rows)
     return rows
   }, [folders, folderTypes, isLoading, isFetching, extraData])
 
-  const test = (folderId: string) => {
-    console.log('testing! ', folderId)
-    setExpanded((prev: ExpandedState) => {
-      return prev
-    })
-
-    setItemExpanded((prev: $Any) => {
-      return folderId
-    })
+  const setExpandedItem = (folderId: string) => {
+    setItemExpanded(folderId)
   }
-
 
   function getFolderIcon(type: string) {
     return folderTypes[type]?.icon || 'folder'
   }
 
   function getTaskIcon(type: string) {
-    console.log('task types: ', taskTypes)
-    console.log('type: ', type)
     return taskTypes[type].icon || 'folder'
   }
 
@@ -119,7 +108,10 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
     }
   }
 
-  function placeholderToTableRow(taskName: string, parentFolder: FolderListItem): Omit<TableRow, 'subRows'> {
+  function placeholderToTableRow(
+    taskName: string,
+    parentFolder: FolderListItem,
+  ): Omit<TableRow, 'subRows'> {
     return {
       id: '',
       parentId: parentFolder.id,
@@ -167,16 +159,12 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
     const sortedItems = [...items].sort((a, b) =>
       (a.label || a.name).localeCompare(b.label || b.name),
     )
-    const itemsMap = sortedItems.reduce(function(map, obj) {
+    const itemsMap = sortedItems.reduce(function (map, obj) {
       // @ts-ignore
-      map[obj.id] = obj;
-      return map;
-  }, {});
+      map[obj.id] = obj
+      return map
+    }, {})
     const itemsMapKeys = Object.keys(itemsMap)
-
-    console.log('items: ', sortedItems)
-    console.log('map: ', itemsMap)
-    console.log('map keys: ', itemsMapKeys)
 
     // Single pass to create base rows and store in Map
     for (let i = 0; i < sortedItems.length; i++) {
@@ -184,7 +172,7 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
       const id = item[elementId] as string
       // @ts-ignore
       const row: TableRow = {
-      // @ts-ignore
+        // @ts-ignore
         ...(item.data ? item : folderToTableRow(item)),
         subRows: [],
       }
@@ -221,15 +209,20 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
     // Iterating tasks
     for (const task of taskPlaceholders) {
       // @ts-ignore
-      const parentId =  task[parentIdKey]
+      const parentId = task[parentIdKey]
       hashTable.get(parentId)?.subRows.push(task)
     }
 
-    console.log('tree: ', dataTree)
     return dataTree
   }
 
-  return { data: tableData, isLoading: isLoading || isFetching, test }
+  return {
+    data: tableData,
+    isLoading: isLoading || isFetching,
+    setExpandedItem,
+    expanded,
+    setExpanded,
+  }
 }
 
 export default useExtendedHierarchyTable

@@ -38,6 +38,8 @@ type Props = {
   isExpandable: boolean
   sliceId: string
   toggleExpanderHandler: $Any
+  expanded: $Any,
+  setExpanded: $Any
 }
 
 const MyTable = ({
@@ -48,6 +50,8 @@ const MyTable = ({
   isExpandable,
   sliceId,
   toggleExpanderHandler,
+  expanded,
+  setExpanded,
 }: Props) => {
   // console.log('root data: ', rootData)
 
@@ -63,7 +67,6 @@ const MyTable = ({
 
   // console.log('td: ', tableData)
 
-
   const table = useReactTable({
     data: tableData,
     columns,
@@ -75,8 +78,12 @@ const MyTable = ({
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     filterFromLeafRows: true,
+    onExpandedChange: setExpanded,
     // @ts-ignore
     filterFns,
+    state: {
+      expanded,
+    }
   })
 
   const { rows } = table.getRowModel()
