@@ -177,15 +177,13 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
         subRows: [],
       }
       hashTable.set(id, row)
-      if (item.hasTasks) {
-        for (const taskName of item.taskNames!) {
-          // @ts-ignore
-          if (itemsMapKeys.includes(item.parentId)) {
-            continue
-          }
-          // @ts-ignore
-          taskPlaceholders.push(placeholderToTableRow(taskName, item))
-        }
+      if (!item.hasTasks) {
+        continue
+      }
+
+      for (const taskName of item.taskNames!) {
+        // @ts-ignore
+        taskPlaceholders.push(placeholderToTableRow(taskName, item))
       }
     }
 
@@ -210,6 +208,9 @@ const useExtendedHierarchyTable = ({ projectName, folderTypes, taskTypes }: Prop
     for (const task of taskPlaceholders) {
       // @ts-ignore
       const parentId = task[parentIdKey]
+      if (hashTable.get(parentId)?.subRows.find(e => e.name == task.name)) {
+        continue
+      }
       hashTable.get(parentId)?.subRows.push(task)
     }
 

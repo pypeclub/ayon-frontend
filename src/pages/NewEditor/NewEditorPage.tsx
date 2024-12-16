@@ -54,7 +54,6 @@ const NewEditorPage = () => {
   const attribFields = attribsData.filter((a: $Any) =>
     a.scope.some((s: $Any) => ['folder', 'task'].includes(s)),
   )
-  // console.log('af: ', attribFields)
 
   // on mount only load root
   // and any other expanded folders
@@ -95,10 +94,10 @@ const NewEditorPage = () => {
               <MyTable
                 attribs={attribFields}
                 rootData={rootDataCache}
+                tableData={data}
                 expanded={expanded}
                 setExpanded={setExpanded}
                 toggleExpanderHandler={handleToggleFolder}
-                tableData={data}
                 isLoading={false}
                 isExpandable={false}
                 sliceId={''}
