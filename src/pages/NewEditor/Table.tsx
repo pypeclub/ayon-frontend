@@ -53,7 +53,6 @@ const MyTable = ({
   expanded,
   setExpanded,
 }: Props) => {
-  // console.log('root data: ', rootData)
 
   const columns = getColumns({
     tableData,
@@ -64,8 +63,6 @@ const MyTable = ({
     sliceId,
     toggleExpanderHandler,
   })
-
-  // console.log('td: ', tableData)
 
   const table = useReactTable({
     data: tableData,
@@ -118,6 +115,8 @@ const MyTable = ({
 
   return (
     <Styled.TableContainer ref={tableContainerRef}>
+      <table style={{borderCollapse: 'collapse'}}>
+
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -173,6 +172,7 @@ const MyTable = ({
           )
         })}
       </tbody>
+      </table>
     </Styled.TableContainer>
   )
 }

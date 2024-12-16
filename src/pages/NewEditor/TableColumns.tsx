@@ -35,12 +35,21 @@ type Props = {
   toggleExpanderHandler: $Any
 }
 
+const ShimmerCell = ({ width }: { width: string }) => {
+  return (
+    <Styled.Cell style={{ width }}>
+      <span
+        className="loading shimmer-light"
+        style={{ display: 'inline-block', width: '100%', height: '20px' }}
+      />
+    </Styled.Cell>
+  )
+}
 const getColumns = ({
   tableData,
   rootData,
   attribs,
   isLoading,
-  isExpandable,
   sliceId,
   toggleExpanderHandler,
 }: Props) =>  {
@@ -52,7 +61,10 @@ const getColumns = ({
         filterFn: 'fuzzy',
         sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
         cell: ({ row, getValue }) => {
-          return (
+          console.log('row: ', row)
+          return !row.original.id ? (
+            <ShimmerCell width="300px" />
+          ) : (
             <Styled.Cell
               className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
               // onClick={(evt) => handleRowSelect(evt, row)}
@@ -77,10 +89,22 @@ const getColumns = ({
               ) : (
                 <div style={{ display: 'inline-block', minWidth: 24 }} />
               )}
-              {row.original.icon && (
+              {row.original.icon ? (
                 <Icon icon={row.original.icon} style={{ color: row.original.iconColor }} />
+              ) : (
+                <span
+                  className="loading shimmer-light"
+                  style={{ minWidth: '20px', height: '20px' }}
+                />
               )}
-              {row.original.name && row.original.name}
+              {row.original.id ? (
+                row.original.name && row.original.name
+              ) : (
+                <span
+                  className="loading shimmer-light"
+                  style={{ minWidth: '20px', height: '20px' }}
+                />
+              )}
               {row.original.startContent && row.original.startContent}
               <span className="title">{getValue<boolean>()}</span>
               <span className="title">{getValue<string>()}</span>
@@ -94,7 +118,9 @@ const getColumns = ({
         filterFn: 'fuzzy',
         sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
         cell: ({ row, getValue }) => {
-          return (
+          return !row.original.id ? (
+            <ShimmerCell width="100px" />
+          ) : (
             <Styled.Cell
               className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
               // onClick={(evt) => handleRowSelect(evt, row)}
@@ -116,7 +142,9 @@ const getColumns = ({
         filterFn: 'fuzzy',
         sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
         cell: ({ row, getValue }) => {
-          return (
+          return !row.original.id ? (
+            <ShimmerCell width="100px" />
+          ) : (
             <Styled.Cell
               className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
               // onClick={(evt) => handleRowSelect(evt, row)}
@@ -140,19 +168,21 @@ const getColumns = ({
           filterFn: 'fuzzy' as FilterFnOption<TableRow>,
           sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
           cell: ({ row, getValue }: {row: $Any, getValue: $Any}) => {
-            return (
-              <Styled.Cell
-                className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
-                // onClick={(evt) => handleRowSelect(evt, row)}
-                // onKeyDown={(evt) => handleRowKeyDown(evt, row)}
-                style={{
-                  width: '100px',
-                }}
-                tabIndex={0}
-              >
-                {rootData[row.id]?.data.attrib[attrib.name] || ''}
-              </Styled.Cell>
-            )
+          return !row.original.id ? (
+            <ShimmerCell width="100px" />
+          ) : (
+            <Styled.Cell
+              className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
+              // onClick={(evt) => handleRowSelect(evt, row)}
+              // onKeyDown={(evt) => handleRowKeyDown(evt, row)}
+              style={{
+                width: '100px',
+              }}
+              tabIndex={0}
+            >
+              {rootData[row.id]?.data.attrib[attrib.name] || ''}
+            </Styled.Cell>
+          )
           },
         }
       }),
@@ -162,7 +192,9 @@ const getColumns = ({
         filterFn: 'fuzzy',
         sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
         cell: ({ row, getValue }) => {
-          return (
+          return !row.original.id ? (
+            <ShimmerCell width="100px" />
+          ) : (
             <Styled.Cell
               className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
               // onClick={(evt) => handleRowSelect(evt, row)}
@@ -184,7 +216,9 @@ const getColumns = ({
         filterFn: 'fuzzy',
         sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
         cell: ({ row, getValue }) => {
-          return (
+          return !row.original.id ? (
+            <ShimmerCell width="100px" />
+          ) : (
             <Styled.Cell
               className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
               // onClick={(evt) => handleRowSelect(evt, row)}
