@@ -1,6 +1,6 @@
 import api from '@api'
 import { branchesLoaded } from '@state/editor'
-import { buildQuery } from '@pages/EditorPage/queries'
+import { buildMultiFolderQuery, buildQuery } from '@pages/EditorPage/queries'
 
 const transformEditorData = (project) => {
   const nodes = {}
@@ -68,8 +68,40 @@ const getEditor = api.injectEndpoints({
         }
       },
     }),
+    getPartialBranch: build.query({
+      query: ({ projectName, folderIds }) => ({
+        url: '/graphql',
+        method: 'POST',
+        body: {
+          query: buildMultiFolderQuery(),
+          variables: { projectName, folders: folderIds },
+        },
+      }),
+      transformResponse: (response) => transformEditorData(response.data?.project),
+      providesTags: (res, error, { folderIds }) => {
+        return folderIds.map(folderId => ({type: 'folder', id: folderId}))
+      },
+      async onCacheEntryAdded(args, { cacheDataLoaded, getCacheEntry, dispatch }) {
+        try {
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded
+
+          // get new branches from query result
+          const newBranches = getCacheEntry().data
+
+          if (newBranches) {
+            console.log('adding nodes to editor state', newBranches)
+
+            // add new branches to redux editor slice
+            dispatch(branchesLoaded(newBranches))
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    }),
   }),
   overrideExisting: true,
 })
 
-export const { useGetExpandedBranchQuery, useLazyGetExpandedBranchQuery } = getEditor
+export const { useGetExpandedBranchQuery, useLazyGetExpandedBranchQuery, useGetPartialBranchQuery } = getEditor
