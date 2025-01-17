@@ -4,7 +4,7 @@ import { $Any } from '@types'
 import { ColumnDef, FilterFnOption, Row, SortingFn, sortingFns } from '@tanstack/react-table'
 import { compareItems } from '@tanstack/match-sorter-utils'
 import clsx from 'clsx'
-import { AssigneeSelect, Icon } from '@ynput/ayon-react-components'
+import { Icon } from '@ynput/ayon-react-components'
 import styled from 'styled-components'
 import { TableRow } from './types'
 import { FolderNode, TaskNode } from '@api/graphql'
@@ -17,6 +17,13 @@ import StatusCell from './Cells/StatusCell'
 import PriorityCell from './Cells/PriorityCell'
 import FolderTypeCell from './Cells/FolderTypeCell'
 import TaskTypeCell from './Cells/TaskTypeCell'
+
+const CellWrapper = styled.div`
+  width: 150px;
+  height: 100%;
+  box-sizing: border-box;
+  padding-right: 2px;
+`
 
 const DelayedShimmerWrapper = styled.div`
   @keyframes fadeInOpacity {
@@ -196,9 +203,9 @@ const TableColumns = ({
           const rawData = getRawData(row)
           // <ShimmerCell width="150px" />
           return (
-            <div style={{ width: '150px' }}>
+            <CellWrapper>
                 <StatusCell status={rawData?.status || 'Not Ready'} />
-            </div>
+            </CellWrapper>
           )
           return !row.original.id || getRawData(row) === undefined ? (
             <TableCellContent> ... </TableCellContent>
@@ -224,7 +231,7 @@ const TableColumns = ({
           const rawData = getRawData(row)
           // <ShimmerCell width="150px" />
           return (
-            <div style={{ width: '150px' }}>
+            <CellWrapper>
               {rawData?.folderType ? (
                 <FolderTypeCell
                   folderTypes={project.folders}
@@ -233,7 +240,7 @@ const TableColumns = ({
               ) : (
                 <TaskTypeCell taskTypes={project.tasks} type={rawData?.taskType || 'task'} />
               )}
-            </div>
+            </CellWrapper>
           )
           return !row.original.id || getRawData(row) === undefined ? (
             <TableCellContent> ... </TableCellContent>
@@ -249,6 +256,7 @@ const TableColumns = ({
           )
         },
       },
+      /*
       {
         accessorKey: 'assignees',
         header: () => 'Assignees',
@@ -275,12 +283,12 @@ const TableColumns = ({
               }}
               tabIndex={0}
             >
-              {/* @ts-ignore */}
               {rawType === 'folders' ? '' : (rawData as TaskNode).attrib?.assignees || 'None'}
             </TableCellContent>
           )
         },
       },
+      */
       {
         accessorKey: 'priority',
         header: () => 'Priority',
@@ -291,12 +299,12 @@ const TableColumns = ({
           const rawData = getRawData(row)
           // <ShimmerCell width="150px" />
           return (
-            <div style={{ width: '150px' }}>
-              <PriorityCell
-                priority={rawData?.attrib?.priority || 'normal'}
-                priorities={priorities}
-              />
-            </div>
+              <CellWrapper>
+                <PriorityCell
+                  priority={rawData?.attrib?.priority || 'normal'}
+                  priorities={priorities}
+                />
+              </CellWrapper>
           )
           return !row.original.id || rawData === undefined ? (
             <TableCellContent> ... </TableCellContent>
@@ -333,19 +341,23 @@ const TableColumns = ({
               const value = getRowAttribValue(row, attrib.name)
               const [val, setVal] = useState(value)
               // <ShimmerCell width="150px" />
-              return !row.original.id || rawData === undefined ? (
-                <EditableCellContent value="..." />
-              ) : (
-                <EditableCellContent
-                  className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
-                  // onClick={(evt) => handleRowSelect(evt, row)}
-                  // onKeyDown={(evt) => handleRowKeyDown(evt, row)}
-                  updateHandler={(newValue: string) => {
-                    setVal(newValue)
-                  }}
-                  tabIndex={0}
-                  value={val}
-                />
+              return (
+                <CellWrapper>
+                  {!row.original.id || rawData === undefined ? (
+                    <EditableCellContent value="..." />
+                  ) : (
+                    <EditableCellContent
+                      className={clsx({ selected: row.getIsSelected(), loading: isLoading })}
+                      // onClick={(evt) => handleRowSelect(evt, row)}
+                      // onKeyDown={(evt) => handleRowKeyDown(evt, row)}
+                      updateHandler={(newValue: string) => {
+                        setVal(newValue)
+                      }}
+                      tabIndex={0}
+                      value={val}
+                    />
+                  )}
+                </CellWrapper>
               )
             },
           }

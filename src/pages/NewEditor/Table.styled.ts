@@ -31,6 +31,7 @@ export const TableCell = styled.td`
   border: solid 1px;
   border-color: var(--md-sys-color-surface-container-highest);
   border-collapse: collapse;
+  min-width: 150px;
   max-width: 150px;
   &.large {
     max-width: 300px;
